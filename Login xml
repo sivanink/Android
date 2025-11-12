@@ -5,38 +5,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+
+
+
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LOGIN FORM"
-        android:textAlignment="center" />
-    <TextView
-        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="USERNAME" />
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="LOGIN FORM" />
+
     <EditText
         android:id="@+id/usernameEditText"
-        android:layout_width="213dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Enter username" />
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PASSWORD"
-        android:layout_marginTop="16dp"/>
+        android:hint="Enter Username"/>
+
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="215dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Enter password" />
+        android:inputType="textPassword"
+        android:hint="Enter Password" />
+
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login" />
+
+
 </LinearLayout>
