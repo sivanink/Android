@@ -1,0 +1,241 @@
+mycal java
+
+package com.example.intecalculator;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private TextView textViewDisplay1, textViewDisplay2;
+    private String currentInput = "";
+    private double n1 = 0;
+    private double n2 = 0;
+    private String operator = "";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        textViewDisplay1 = findViewById(R.id.textViewDisplay1);
+        textViewDisplay2 = findViewById(R.id.textViewDisplay2);
+        updateDisplay();
+    }
+
+    private void updateDisplay() {
+        if (currentInput.isEmpty()) {
+            textViewDisplay1.setText("0");
+        } else {
+            // Handle potential formatting for long numbers if needed
+            textViewDisplay1.setText(currentInput);
+        }
+    }
+
+    public void onNumberClick(View view) {
+        // Prevent multiple decimals in one number
+        if (view.getTag().toString().equals(".") && currentInput.contains(".")) {
+            return;
+        }
+        currentInput += view.getTag().toString();
+        updateDisplay();
+    }
+
+    public void onOperatorClick(View view) {
+        if (!currentInput.isEmpty()) {
+            n1 = Double.parseDouble(currentInput);
+            operator = view.getTag().toString();
+            currentInput = "";
+            // Update secondary display to show the operation
+            textViewDisplay2.setText(n1 + " " + operator);
+        }
+    }
+
+    public void onEqualsClick(View view) {
+        // FIX 1: Corrected the main condition.
+        // This block should only run if an operator is set and a second number has been entered.
+        if (operator.isEmpty() || currentInput.isEmpty()) {
+            return; // Do nothing if the expression is incomplete
+        }
+
+        // FIX 2: Moved this line inside the valid condition.
+        n2 = Double.parseDouble(currentInput);
+        double result = 0;
+
+        switch (operator) {
+            case "+":
+                result = n1 + n2;
+                break;
+            case "-":
+                result = n1 - n2;
+                break;
+            case "*":
+                result = n1 * n2;
+                break;
+            case "/":
+                if (n2 != 0) {
+                    result = n1 / n2;
+                } else {
+                    textViewDisplay1.setText("Error");
+                    textViewDisplay2.setText("Cannot divide by zero");
+                    // Reset state after error
+                    currentInput = "";
+                    operator = "";
+                    n1 = 0;
+                    n2 = 0;
+                    return; // Exit the method
+                }
+                break;
+        }
+
+        // FIX 3: Moved this logic block outside and after the switch statement.
+        // It now runs for all successful calculations.
+        textViewDisplay2.setText(n1 + " " + operator + " " + n2 + " =");
+        currentInput = String.valueOf(result);
+        operator = ""; // Reset for the next calculation
+        updateDisplay();
+    } // FIX 4: Added the missing closing brace for the method.
+
+    public void onClearClick(View view) {
+        currentInput = "";
+        n1 = 0;
+        n2 = 0;
+        operator = "";
+        textViewDisplay2.setText(""); // Clear the secondary display too
+        updateDisplay();
+    }
+}
+
+
+mycal xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="Simple Calculator"
+        android:textSize="20sp"
+        android:textStyle="bold" /> <!-- FIX 1: Corrected 'textStyle' -->
+
+    <!-- Secondary Display (for showing the operation) -->
+    <TextView
+        android:id="@+id/textViewDisplay2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:padding="16dp"
+        android:text=""
+        android:textSize="15sp" />
+
+    <!-- Main Display (for showing current input and result) -->
+    <TextView
+        android:id="@+id/textViewDisplay1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:padding="16dp"
+        android:text="0"
+        android:textSize="30sp" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:columnCount="4">
+
+        <!-- Row 1 -->
+        <Button
+            android:text="1"
+            android:tag="1"
+            android:onClick="onNumberClick" /> <!-- FIX 2: Corrected onClick name -->
+        <Button
+            android:text="2"
+            android:tag="2"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="3"
+            android:tag="3"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="+"
+            android:tag="+"
+            android:onClick="onOperatorClick" /> <!-- FIX 2: Corrected onClick name -->
+
+        <!-- Row 2 -->
+        <Button
+            android:text="4"
+            android:tag="4"
+            android:onClick="onNumberClick" /> <!-- FIX 3: Corrected tag from '5' to '4' -->
+        <Button
+            android:text="5"
+            android:tag="5"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="6"
+            android:tag="6"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="-"
+            android:tag="-"
+            android:onClick="onOperatorClick" />
+
+        <!-- Row 3 -->
+        <Button
+            android:text="7"
+            android:tag="7"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="8"
+            android:tag="8"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="9"
+            android:tag="9"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="*"
+            android:tag="*"
+            android:onClick="onOperatorClick" />
+
+        <!-- Row 4 -->
+        <Button
+            android:text="0"
+            android:tag="0"
+            android:onClick="onNumberClick" />
+        <Button
+            android:text="C"
+            android:onClick="onClearClick" /> <!-- FIX 2: Corrected onClick name -->
+        <Button
+            android:text="="
+            android:onClick="onEqualsClick" /> <!-- FIX 2: Corrected onClick name -->
+        <Button
+            android:text="/"
+            android:tag="/"
+            android:onClick="onOperatorClick" />
+
+    </GridLayout>
+
+</LinearLayout>
+
+
+
+
+
+
+
+
